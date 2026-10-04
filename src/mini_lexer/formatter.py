@@ -45,7 +45,7 @@ def format_token(token: Any, symbols: SymbolTable) -> str:
     TODO (members 1 and 6): verify every line against the assignment PDF.
     """
     if token.type == "IDENTIFIER":
-        if symbols.register(token.value):
+        if symbols.add(token.value):
             return f"new identifier: {token.value}"
         return f'identifier "{token.value}" already in symbol table'
     if token.type in OPERATOR_TYPES:
