@@ -1,27 +1,26 @@
-"""Identifier symbol table.
-
-Owner: member 4
 """
-
-from __future__ import annotations
-
-
+Identifier symbol table.
+Owner: 67050219
+"""
 class SymbolTable:
-    """Remember identifiers that have already appeared in the input."""
 
-    def __init__(self) -> None:
-        self._identifiers: set[str] = set()
+    def __init__(self):
+        self.symbols = set()
 
-    def register(self, name: str) -> bool:
-        """Add *name* and return True, or return False when it already exists."""
-        if name in self._identifiers:
+    def add(self, identifier):
+        # ตรวจสอบว่า identifier มีอยู่แล้วหรือไม่
+        if identifier in self.symbols:
+            print(f'identifier "{identifier}" already in symbol table')
             return False
-        self._identifiers.add(name)
+
+        # ถ้ายังไม่มี ให้เพิ่มเข้า Symbol Table
+        self.symbols.add(identifier)
+        print(f"new identifier: {identifier}")
         return True
 
-    def __contains__(self, name: str) -> bool:
-        return name in self._identifiers
+    def contains(self, identifier):
+        return identifier in self.symbols
 
-    def __len__(self) -> int:
-        return len(self._identifiers)
+    def get_all(self):
+        return sorted(self.symbols)
 
