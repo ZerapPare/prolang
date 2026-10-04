@@ -6,20 +6,81 @@ Paradigms โปรแกรมจะใช้ Python และ SLY เพื่
 
 > ตอนนี้เป็นเพียงโครงเริ่มต้น กฎ token หลักใน `lexer.py` ยังเป็น `TODO`
 
-## ติดตั้งและทดลอง
+## การติดตั้ง
 
-ต้องมี Python 3.10 หรือใหม่กว่า จากนั้นรันคำสั่ง:
+### สิ่งที่ต้องมี
+- Python 3.10 ขึ้นไป ตรวจสอบได้ด้วย `python --version`
+
+### ขั้นตอน
+1. เปิด PowerShell ที่โฟลเดอร์โปรเจกต์
+2. (ไม่บังคับ) สร้าง virtual environment เพื่อแยกไลบรารีออกจากเครื่อง
+   ```powershell
+   python -m venv .venv
+   .\.venv\Scripts\Activate.ps1
+   ```
+3. ติดตั้ง SLY และ pytest
+   ```powershell
+   python -m pip install -r requirements.txt
+   ```
+4. ตรวจว่าติดตั้ง SLY สำเร็จ
+   ```powershell
+   python -m pip show sly
+   ```
+   ต้องเห็นบรรทัด `Version: 0.5`
+
+## วิธีใช้งาน
+
+ส่งชื่อไฟล์ `.txt` ที่มี source code ให้โปรแกรม
 
 ```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
-python -m pytest
+python main.py <ชื่อไฟล์.txt>
+```
+
+ตัวอย่าง:
+
+```powershell
 python main.py samples\valid_basic.txt
+python main.py samples\valid_comments.txt
+python main.py samples\invalid_character.txt
 ```
 
 ในช่วงแรก `valid_basic.txt` จะยังเกิด lexical error เพราะสมาชิกแต่ละคนยังต้อง
 เพิ่มกฎ token ของตนเองให้ครบ
+
+### ตัวอย่างผลลัพธ์
+
+input (`samples\invalid_character.txt`):
+```text
+A @ B;
+```
+
+output:
+```text
+new identifier: A
+Lexical error: unexpected character @
+```
+
+โปรแกรมหยุดทันทีเมื่อพบ `@` จึงไม่แสดง `B` และ `;`
+
+### ข้อความ error และค่าที่โปรแกรมคืน
+
+| สถานการณ์ | ข้อความ | ค่าที่คืน |
+|---|---|---|
+| ทำงานสำเร็จ | แสดง token ทีละบรรทัด | 0 |
+| พบอักขระที่ไม่รู้จัก | `Lexical error: unexpected character X` | 1 |
+| ไฟล์ไม่ใช่ `.txt` | `Error: input file must have a .txt extension` | 1 |
+| หาไฟล์ไม่เจอ หรืออ่านไม่ได้ | `Error: cannot read <ไฟล์>: ...` | 1 |
+
+ไฟล์ต้องบันทึกเป็น UTF-8 โปรแกรมรองรับไฟล์ที่มี BOM จาก Notepad ด้วย
+
+## การรันชุดทดสอบ
+
+```powershell
+python -m pytest -v
+```
+
+ต้องใช้ `python -m pytest` ไม่ใช่ `pytest` เฉย ๆ เพื่อให้ Python หาไฟล์ `main.py`
+และโฟลเดอร์ `src` เจอ
 
 ## โครงสร้างไฟล์
 

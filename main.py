@@ -14,41 +14,42 @@ from src.mini_lexer.lexer import LexicalError, MiniLexer
 from src.mini_lexer.symbol_table import SymbolTable
 
 
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Analyze tokens in a source file")
-    parser.add_argument("input_file", type=Path, help="path to a .txt source file")
-    return parser.parse_args()
-
-
-def analyze_file(input_file: Path) -> int:
-    """Read one source file, tokenize it, and print the required output."""
-    if input_file.suffix.lower() != ".txt":
-        print("Error: input file must have a .txt extension")
-        return 1
-
-    try:
-        source = input_file.read_text(encoding="utf-8")
-    except OSError as error:
-        print(f"Error: cannot read {input_file}: {error}")
-        return 1
-
+def run(source: str, out=print) -> int:
+    """แยก token จาก source แล้วแสดงผลทีละบรรทัด คืน 0 ถ้าสำเร็จ, 1 ถ้าเจอ error"""
     lexer = MiniLexer()
     symbols = SymbolTable()
 
     try:
         for token in lexer.tokenize(source):
-            print(format_token(token, symbols))
+            out(format_token(token, symbols))
     except LexicalError as error:
-        print(error)
+        # แสดงอักขระที่ผิดแล้วหยุดทันที
+        out(str(error))
         return 1
 
     return 0
 
 
-def main() -> int:
-    return analyze_file(parse_args().input_file)
+def main(argv: list[str] | None = None) -> int:
+    """รับชื่อไฟล์จาก command line อ่านไฟล์ แล้วส่งให้ run()"""
+    parser = argparse.ArgumentParser(description="Analyze tokens in a source file")
+    parser.add_argument("input_file", type=Path, help="path to a .txt source file")
+    input_file = parser.parse_args(argv).input_file
+
+    # โจทย์กำหนดให้รับเฉพาะไฟล์ .txt
+    if input_file.suffix.lower() != ".txt":
+        print("Error: input file must have a .txt extension")
+        return 1
+
+    try:
+        # utf-8-sig ตัด BOM ที่ Notepad อาจใส่ไว้ต้นไฟล์
+        source = input_file.read_text(encoding="utf-8-sig")
+    except (OSError, UnicodeDecodeError) as error:
+        print(f"Error: cannot read {input_file}: {error}")
+        return 1
+
+    return run(source)
 
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
