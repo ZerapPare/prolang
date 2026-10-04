@@ -10,12 +10,10 @@ class SymbolTable:
     def add(self, identifier):
         # ตรวจสอบว่า identifier มีอยู่แล้วหรือไม่
         if identifier in self.symbols:
-            print(f'identifier "{identifier}" already in symbol table')
             return False
 
         # ถ้ายังไม่มี ให้เพิ่มเข้า Symbol Table
         self.symbols.add(identifier)
-        print(f"new identifier: {identifier}")
         return True
 
     def contains(self, identifier):
