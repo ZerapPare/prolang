@@ -1,0 +1,5 @@
+A + B - 10;
+if A >= B then
+    print "A is greater";
+endif
+

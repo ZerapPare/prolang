@@ -1,0 +1,7 @@
+// This entire line must be ignored.
+read A;
+
+/* This block comment
+   spans multiple lines. */
+A++;
+
