@@ -80,9 +80,26 @@ class MiniLexer(Lexer):
 
     # ------------------------------------------------------------------
     # MEMBER 2: operators, parentheses, and semicolon
-    # TODO: Put longer operators before their shorter prefixes.
+    # Two-character operators must appear before single-character operators.
     # ------------------------------------------------------------------
-
+    GE = r'>='
+    LE = r'<='
+    EQ = r'=='
+    INCREMENT = r'\+\+'
+    DECREMENT = r'--'
+    
+    PLUS = r'\+'
+    MINUS = r'-'
+    TIMES = r'\*'
+    DIVIDE = r'/'
+    ASSIGN = r'='
+    GT = r'>'
+    LT = r'<'
+    
+    LPAREN = r'\('
+    RPAREN = r'\)'
+    SEMICOLON = r';'
+    
     # ------------------------------------------------------------------
     # MEMBER 3: integer, identifier, and case-sensitive keywords
     # TODO: Add the integer/identifier rules and keyword mapping.
