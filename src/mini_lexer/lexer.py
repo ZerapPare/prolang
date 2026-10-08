@@ -87,6 +87,21 @@ class MiniLexer(Lexer):
     # MEMBER 3: integer, identifier, and case-sensitive keywords
     # TODO: Add the integer/identifier rules and keyword mapping.
     # ------------------------------------------------------------------
+    # ------------------------------------------------------------------
+    # MEMBER 3: integer, identifier, and case-sensitive keywords
+    # ------------------------------------------------------------------
+    INTEGER = r"\d+"
+    IDENTIFIER = r"[a-zA-Z][a-zA-Z0-9]*"
+    IDENTIFIER["if"] = IF
+    IDENTIFIER["then"] = THEN
+    IDENTIFIER["else"] = ELSE
+    IDENTIFIER["endif"] = ENDIF
+    IDENTIFIER["while"] = WHILE
+    IDENTIFIER["do"] = DO
+    IDENTIFIER["endwhile"] = ENDWHILE
+    IDENTIFIER["print"] = PRINT
+    IDENTIFIER["newline"] = NEWLINE
+    IDENTIFIER["read"] = READ
 
     # ------------------------------------------------------------------
     # MEMBER 6: line counting and lexical errors

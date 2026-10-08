@@ -85,5 +85,71 @@ def test_lexical_error_stops_processing_immediately() -> None:
 
 # TODO member 2: operator and punctuation tests
 # TODO member 3: integer, identifier, and keyword tests
+def test_integer_tokens() -> None:
+    tokens = list(MiniLexer().tokenize("0 123 12345"))
+
+    assert [(token.type, token.value) for token in tokens] == [
+        ("INTEGER", "0"),
+        ("INTEGER", "123"),
+        ("INTEGER", "12345"),
+    ]
+
+
+def test_identifier_tokens() -> None:
+    tokens = list(MiniLexer().tokenize("A score id1 student123"))
+
+    assert [(token.type, token.value) for token in tokens] == [
+        ("IDENTIFIER", "A"),
+        ("IDENTIFIER", "score"),
+        ("IDENTIFIER", "id1"),
+        ("IDENTIFIER", "student123"),
+    ]
+
+
+def test_lowercase_keywords_are_mapped() -> None:
+    tokens = list(
+        MiniLexer().tokenize(
+            "if then else endif while do endwhile print newline read"
+        )
+    )
+
+    assert [(token.type, token.value) for token in tokens] == [
+        ("IF", "if"),
+        ("THEN", "then"),
+        ("ELSE", "else"),
+        ("ENDIF", "endif"),
+        ("WHILE", "while"),
+        ("DO", "do"),
+        ("ENDWHILE", "endwhile"),
+        ("PRINT", "print"),
+        ("NEWLINE", "newline"),
+        ("READ", "read"),
+    ]
+
+
+def test_keywords_are_case_sensitive() -> None:
+    tokens = list(MiniLexer().tokenize("if If IF"))
+
+    assert [(token.type, token.value) for token in tokens] == [
+        ("IF", "if"),
+        ("IDENTIFIER", "If"),
+        ("IDENTIFIER", "IF"),
+    ]
+
+
+def test_keyword_prefix_is_identifier() -> None:
+    tokens = list(MiniLexer().tokenize("iffy print1 newline2"))
+
+    assert [(token.type, token.value) for token in tokens] == [
+        ("IDENTIFIER", "iffy"),
+        ("IDENTIFIER", "print1"),
+        ("IDENTIFIER", "newline2"),
+    ]
+
+
+def test_underscore_is_not_allowed_in_identifier() -> None:
+    with pytest.raises(LexicalError, match=r"unexpected character _"):
+        list(MiniLexer().tokenize("_score"))
+
 # TODO member 6: line counting and stop-on-error tests
 
