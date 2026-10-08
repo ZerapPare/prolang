@@ -53,6 +53,32 @@ class MiniLexer(Lexer):
     ignore = " \t"
 
     # ------------------------------------------------------------------
+    # MEMBER 5: string and comments
+    #
+    # Keep these function rules before operator rules so // and /* are
+    # recognized before a future DIVIDE rule can match their first slash.
+    # ------------------------------------------------------------------
+    @_(r'"[^"\n]*"')
+    def STRING(self, token):
+        """Match a double-quoted string and preserve its quotes."""
+        return token
+
+    @_(r'//[^\n]*')
+    def LINE_COMMENT(self, token):
+        """Ignore a single-line comment, including one ending at EOF."""
+        pass
+
+    @_(r'/\*[\s\S]*?\*/')
+    def BLOCK_COMMENT(self, token):
+        """Ignore a block comment and account for its newlines."""
+        self.lineno += token.value.count("\n")
+
+    @_(r'/\*(?:(?!\*/)[\s\S])*\Z')
+    def UNTERMINATED_BLOCK_COMMENT(self, token):
+        """Reject a block comment that has no closing delimiter."""
+        raise LexicalError("Lexical error: unterminated block comment")
+
+    # ------------------------------------------------------------------
     # MEMBER 2: operators, parentheses, and semicolon
     # TODO: Put longer operators before their shorter prefixes.
     # ------------------------------------------------------------------
@@ -60,11 +86,6 @@ class MiniLexer(Lexer):
     # ------------------------------------------------------------------
     # MEMBER 3: integer, identifier, and case-sensitive keywords
     # TODO: Add the integer/identifier rules and keyword mapping.
-    # ------------------------------------------------------------------
-
-    # ------------------------------------------------------------------
-    # MEMBER 5: string and comments
-    # TODO: Ignore // comments and /* ... */ comments, including multiline.
     # ------------------------------------------------------------------
 
     # ------------------------------------------------------------------
