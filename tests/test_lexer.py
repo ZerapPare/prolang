@@ -83,7 +83,58 @@ def test_lexical_error_stops_processing_immediately() -> None:
         next(tokens)
 
 
-# TODO member 2: operator and punctuation tests
+# Member 2: operator and punctuation tests
+
+def test_single_character_operators() -> None:
+    tokens = list(MiniLexer().tokenize("+ - * / = > <"))
+
+    assert [(token.type, token.value) for token in tokens] == [
+        ("PLUS", "+"),
+        ("MINUS", "-"),
+        ("TIMES", "*"),
+        ("DIVIDE", "/"),
+        ("ASSIGN", "="),
+        ("GT", ">"),
+        ("LT", "<"),
+    ]
+
+
+def test_long_operators_are_not_split() -> None:
+    tokens = list(MiniLexer().tokenize(">= > <= < == = ++ + -- -"))
+
+    assert [(token.type, token.value) for token in tokens] == [
+        ("GE", ">="),
+        ("GT", ">"),
+        ("LE", "<="),
+        ("LT", "<"),
+        ("EQ", "=="),
+        ("ASSIGN", "="),
+        ("INCREMENT", "++"),
+        ("PLUS", "+"),
+        ("DECREMENT", "--"),
+        ("MINUS", "-"),
+    ]
+
+
+def test_adjacent_parentheses_and_semicolon() -> None:
+    tokens = list(MiniLexer().tokenize("();"))
+
+    assert [(token.type, token.value) for token in tokens] == [
+        ("LPAREN", "("),
+        ("RPAREN", ")"),
+        ("SEMICOLON", ";"),
+    ]
+
+
+def test_division_and_comments_together() -> None:
+    source = "/ /* + >= ;\n -- */ / // * == ()\n /"
+    tokens = list(MiniLexer().tokenize(source))
+
+    assert [(token.type, token.value) for token in tokens] == [
+        ("DIVIDE", "/"),
+        ("DIVIDE", "/"),
+        ("DIVIDE", "/"),
+    ]
 # TODO member 3: integer, identifier, and keyword tests
 # TODO member 6: line counting and stop-on-error tests
 
