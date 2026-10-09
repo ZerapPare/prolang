@@ -202,5 +202,24 @@ def test_underscore_is_not_allowed_in_identifier() -> None:
     with pytest.raises(LexicalError, match=r"unexpected character _"):
         list(MiniLexer().tokenize("_score"))
 
-# TODO member 6: line counting and stop-on-error tests
+# Member 6: line counting and error handling
 
+def test_line_number_increments_across_multiple_lines() -> None:
+    tokens = list(MiniLexer().tokenize('"a"\n"b"\n\n"c"'))
+
+    assert [token.lineno for token in tokens] == [1, 2, 4]
+
+
+def test_crlf_line_endings_do_not_raise_lexical_error() -> None:
+    tokens = list(MiniLexer().tokenize('"a"\r\n"b"'))
+
+    assert [token.value for token in tokens] == ['"a"', '"b"']
+
+
+def test_blank_lines_produce_no_tokens() -> None:
+    assert list(MiniLexer().tokenize("\n\n\n")) == []
+
+
+def test_error_names_the_first_bad_character_only() -> None:
+    with pytest.raises(LexicalError, match=r"unexpected character #"):
+        list(MiniLexer().tokenize('"ok"\n#\n"never reached"'))

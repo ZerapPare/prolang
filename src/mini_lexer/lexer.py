@@ -125,7 +125,7 @@ class MiniLexer(Lexer):
     # This newline rule makes the starter class buildable before token rules
     # are added. Expand its tests as the lexer is implemented.
     # ------------------------------------------------------------------
-    @_(r"\n+")
+    @_(r"(?:\r?\n)+")
     def ignore_newlines(self, token):
         self.lineno += token.value.count("\n")
 
