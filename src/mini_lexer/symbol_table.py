@@ -8,11 +8,11 @@ class SymbolTable:
         self.symbols = set()
 
     def add(self, identifier):
-        # ตรวจสอบว่า identifier มีอยู่แล้วหรือไม่
+        # มี identifier แล้ว
         if identifier in self.symbols:
             return False
 
-        # ถ้ายังไม่มี ให้เพิ่มเข้า Symbol Table
+        # ไม่มีเพิ่มเข้า Symbol Table
         self.symbols.add(identifier)
         return True
 
