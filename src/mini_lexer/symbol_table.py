@@ -1,7 +1,4 @@
-"""
-Identifier symbol table.
-Owner: 67050219
-"""
+"""Store unique identifiers and check whether they have appeared before."""
 class SymbolTable:
 
     def __init__(self):

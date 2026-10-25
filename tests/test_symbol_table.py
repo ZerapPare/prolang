@@ -1,4 +1,4 @@
-"""Starter tests for member 4's symbol table."""
+"""Test identifier registration, duplicate detection, and sorted lookup."""
 
 from src.mini_lexer.symbol_table import SymbolTable
 
