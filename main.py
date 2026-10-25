@@ -1,6 +1,5 @@
 """Command-line entry point for the Mini Lexical Analyzer.
 
-Owner: member 1
 Run with: python main.py samples/valid_basic.txt
 """
 

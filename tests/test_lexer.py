@@ -1,4 +1,4 @@
-"""Shared lexer tests. Each member should add at least four test cases here."""
+"""Test token recognition, ignored comments, line counting, and lexical errors."""
 
 import pytest
 
@@ -14,7 +14,7 @@ def test_unknown_character_stops_lexer() -> None:
         list(MiniLexer().tokenize("@"))
 
 
-# Member 5: strings and comments
+# Strings and comments
 
 def test_string_preserves_surrounding_quotes() -> None:
     tokens = list(MiniLexer().tokenize('"Hello World"'))
@@ -66,7 +66,7 @@ def test_unterminated_block_comment_is_a_lexical_error() -> None:
 
 @pytest.mark.skipif(
     "DIVIDE" not in MiniLexer._master_re.groupindex,
-    reason="Member 2 DIVIDE rule is not implemented",
+    reason="The DIVIDE token rule is unavailable",
 )
 def test_regular_division_is_not_treated_as_a_comment() -> None:
     tokens = list(MiniLexer().tokenize("/"))
@@ -83,7 +83,7 @@ def test_lexical_error_stops_processing_immediately() -> None:
         next(tokens)
 
 
-# Member 2: operator and punctuation tests
+# Operators and punctuation
 
 def test_single_character_operators() -> None:
     tokens = list(MiniLexer().tokenize("+ - * / = > <"))
@@ -135,7 +135,7 @@ def test_division_and_comments_together() -> None:
         ("DIVIDE", "/"),
         ("DIVIDE", "/"),
     ]
-# TODO member 3: integer, identifier, and keyword tests
+# Integers, identifiers, and keywords
 def test_integer_tokens() -> None:
     tokens = list(MiniLexer().tokenize("0 123 12345"))
 
@@ -202,7 +202,7 @@ def test_underscore_is_not_allowed_in_identifier() -> None:
     with pytest.raises(LexicalError, match=r"unexpected character _"):
         list(MiniLexer().tokenize("_score"))
 
-# Member 6: line counting and error handling
+# Line counting and error handling
 
 def test_line_number_increments_across_multiple_lines() -> None:
     tokens = list(MiniLexer().tokenize('"a"\n"b"\n\n"c"'))

@@ -1,7 +1,4 @@
-"""SLY lexer rules shared by members 2, 3, 5, and 6.
-
-Keep each member's rules inside the marked section to reduce merge conflicts.
-"""
+"""SLY token rules for operators, values, keywords, and comments."""
 
 from __future__ import annotations
 
@@ -13,10 +10,10 @@ class LexicalError(Exception):
 
 
 class MiniLexer(Lexer):
-    """Tokenize the simulated language described in TermReport1-2569."""
+    """Convert source text into tokens and reject lexical errors."""
 
     tokens = {
-        # Member 2: operators and punctuation
+        # operators
         PLUS,
         MINUS,
         TIMES,
@@ -29,10 +26,11 @@ class MiniLexer(Lexer):
         EQ,
         INCREMENT,
         DECREMENT,
+        # parentheses and semicolon
         LPAREN,
         RPAREN,
         SEMICOLON,
-        # Member 3: values and words
+        # values and words
         INTEGER,
         IDENTIFIER,
         IF,
@@ -45,7 +43,7 @@ class MiniLexer(Lexer):
         PRINT,
         NEWLINE,
         READ,
-        # Member 5: string
+        # string
         STRING,
     }
 
@@ -53,10 +51,10 @@ class MiniLexer(Lexer):
     ignore = " \t"
 
     # ------------------------------------------------------------------
-    # MEMBER 5: string and comments
+    # Strings and comments
     #
     # Keep these function rules before operator rules so // and /* are
-    # recognized before a future DIVIDE rule can match their first slash.
+    # recognized before DIVIDE can match their first slash.
     # ------------------------------------------------------------------
     @_(r'"[^"\n]*"')
     def STRING(self, token):
@@ -79,7 +77,7 @@ class MiniLexer(Lexer):
         raise LexicalError("Lexical error: unterminated block comment")
 
     # ------------------------------------------------------------------
-    # MEMBER 2: operators, parentheses, and semicolon
+    # Operators, parentheses, and semicolon
     # Two-character operators must appear before single-character operators.
     # ------------------------------------------------------------------
     GE = r'>='
@@ -101,11 +99,7 @@ class MiniLexer(Lexer):
     SEMICOLON = r';'
     
     # ------------------------------------------------------------------
-    # MEMBER 3: integer, identifier, and case-sensitive keywords
-    # TODO: Add the integer/identifier rules and keyword mapping.
-    # ------------------------------------------------------------------
-    # ------------------------------------------------------------------
-    # MEMBER 3: integer, identifier, and case-sensitive keywords
+    # Integers, identifiers, and case-sensitive keywords
     # ------------------------------------------------------------------
     INTEGER = r"\d+"
     IDENTIFIER = r"[a-zA-Z][a-zA-Z0-9]*"
@@ -121,9 +115,8 @@ class MiniLexer(Lexer):
     IDENTIFIER["read"] = READ
 
     # ------------------------------------------------------------------
-    # MEMBER 6: line counting and lexical errors
-    # This newline rule makes the starter class buildable before token rules
-    # are added. Expand its tests as the lexer is implemented.
+    # Line counting and lexical errors
+    # Accept both LF and Windows CRLF line endings.
     # ------------------------------------------------------------------
     @_(r"(?:\r?\n)+")
     def ignore_newlines(self, token):

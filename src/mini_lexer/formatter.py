@@ -1,7 +1,4 @@
-"""Convert SLY tokens to the exact text required by the assignment.
-
-Owners: members 1 and 6
-"""
+"""Format tokens for display and register identifiers in the symbol table."""
 
 from __future__ import annotations
 
@@ -40,10 +37,7 @@ OPERATOR_TYPES = {
 
 
 def format_token(token: Any, symbols: SymbolTable) -> str:
-    """Return one output line for a token.
-
-    TODO (members 1 and 6): verify every line against the assignment PDF.
-    """
+    """Return one output line, distinguishing new and repeated identifiers."""
     if token.type == "IDENTIFIER":
         if symbols.add(token.value):
             return f"new identifier: {token.value}"
