@@ -198,9 +198,37 @@ def test_keyword_prefix_is_identifier() -> None:
     ]
 
 
-def test_underscore_is_not_allowed_in_identifier() -> None:
-    with pytest.raises(LexicalError, match=r"unexpected character _"):
+def test_identifier_starting_with_underscore_is_rejected() -> None:
+    with pytest.raises(
+        LexicalError,
+        match="must start with an English letter",
+    ):
         list(MiniLexer().tokenize("_score"))
+
+
+def test_identifier_starting_with_digit_is_rejected() -> None:
+    with pytest.raises(LexicalError, match="must not start with a digit"):
+        list(MiniLexer().tokenize("1score"))
+
+
+def test_identifier_with_multiple_leading_digits_is_rejected() -> None:
+    with pytest.raises(LexicalError, match="must not start with a digit"):
+        list(MiniLexer().tokenize("123abc"))
+
+
+def test_underscore_inside_identifier_is_rejected() -> None:
+    with pytest.raises(LexicalError, match="must not contain underscore"):
+        list(MiniLexer().tokenize("student_name"))
+
+
+def test_integer_followed_by_space_and_identifier_is_valid() -> None:
+    tokens = list(MiniLexer().tokenize("123 score"))
+
+    assert [(token.type, token.value) for token in tokens] == [
+        ("INTEGER", "123"),
+        ("IDENTIFIER", "score"),
+    ]
+
 
 # Line counting and error handling
 

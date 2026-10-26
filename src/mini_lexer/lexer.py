@@ -101,6 +101,27 @@ class MiniLexer(Lexer):
     # ------------------------------------------------------------------
     # Integers, identifiers, and case-sensitive keywords
     # ------------------------------------------------------------------
+    # Invalid identifiers
+    @_(r"\d+[a-zA-Z][a-zA-Z0-9_]*")
+    def INVALID_IDENTIFIER_STARTS_WITH_DIGIT(self, token):
+        raise LexicalError(
+            f"Lexical error: identifier '{token.value}' "
+            "must not start with a digit"
+        )
+
+    @_(r"[a-zA-Z][a-zA-Z0-9]*_[a-zA-Z0-9_]*")
+    def INVALID_IDENTIFIER_CONTAINS_UNDERSCORE(self, token):
+        raise LexicalError(
+            f"Lexical error: identifier '{token.value}' "
+            "must not contain underscore"
+        )
+
+    @_(r"_[a-zA-Z0-9_]*")
+    def INVALID_IDENTIFIER_STARTS_WITH_UNDERSCORE(self, token):
+        raise LexicalError(
+            f"Lexical error: identifier '{token.value}' "
+            "must start with an English letter"
+        )
     INTEGER = r"\d+"
     IDENTIFIER = r"[a-zA-Z][a-zA-Z0-9]*"
     IDENTIFIER["if"] = IF
