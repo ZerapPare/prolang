@@ -1,7 +1,5 @@
-"""Command-line entry point for the Mini Lexical Analyzer.
+# Run with: python main.py samples/valid_basic.txt
 
-Run with: python main.py samples/valid_basic.txt
-"""
 
 from __future__ import annotations
 
@@ -35,13 +33,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("input_file", type=Path, help="path to a .txt source file")
     input_file = parser.parse_args(argv).input_file
 
-    # โจทย์กำหนดให้รับเฉพาะไฟล์ .txt
+    # รับเฉพาะไฟล์ .txt
     if input_file.suffix.lower() != ".txt":
         print("Error: input file must have a .txt extension")
         return 1
 
     try:
-        # utf-8-sig ตัด BOM ที่ Notepad อาจใส่ไว้ต้นไฟล์
         source = input_file.read_text(encoding="utf-8-sig")
     except (OSError, UnicodeDecodeError) as error:
         print(f"Error: cannot read {input_file}: {error}")
